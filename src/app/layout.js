@@ -11,10 +11,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="cmyk">
+    <html lang="en" data-theme="wireframe">
       <body className={inter.className}>
         <Navbar />
-        {children}
+        <div className="max-w-7xl w-full mx-auto">
+          {children}
+        </div>
       </body>
     </html>
   );
