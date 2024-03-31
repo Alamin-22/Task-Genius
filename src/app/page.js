@@ -1,9 +1,7 @@
 "use client"
+import React from "react";
 import Image from 'next/image';
 import TaskManage from "@/assets/Image/TaskMange.jpg"
-
-import React from "react";
-import ReactTextRotator from "react-text-rotator";
 
 
 export default function Home() {
