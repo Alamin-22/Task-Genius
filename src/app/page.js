@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div>
       {/* Banner Section */}
-      <div className="hero ">
+      <div className="hero">
         <div className="hero-content flex-col-reverse md:flex-row-reverse">
           <Image
             src={TaskManage}
@@ -34,9 +34,9 @@ export default function Home() {
       <section>
         <div className="mb-10">
           <div className="divider divider-primary ">
-            <h1 className=" text-xl md:text-4xl text-gray-700 font-bold text-center">
+            <p className=" text-lg md:text-4xl text-gray-700 font-bold text-center ">
               How Task Genius Benefit Users
-            </h1>
+            </p>
           </div>
           <p className="md:text-xl font-semibold text-gray-600 my-8 text-center mx-auto px-3 max-w-5xl">
             Are you constantly struggling to keep track of your tasks and projects? Do you find yourself overwhelmed by deadlines and responsibilities? If so, it&amp;s time to discover the transformable benefits of task management websites. Whether you&amp;re a busy professional, a student juggling multiple assignments, or a freelancer managing various projects, task management websites offer invaluable solutions to streamline your workflow and boost your productivity.
