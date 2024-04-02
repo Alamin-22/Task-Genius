@@ -1,8 +1,11 @@
 "use client"
 import React from "react";
 import Image from 'next/image';
-import TaskManage from "@/assets/Image/TaskMange.jpg"
-
+import TaskManage from "@/assets/Image/TaskMange.png"
+import Lottie from "lottie-react";
+import animation from "@/assets/animation.json"
+import meeting from "@/assets/Image/meeting.png"
+import time from "@/assets/Image/time.png"
 
 export default function Home() {
   const ReactRotatingText = require('react-rotating-text');
@@ -11,11 +14,11 @@ export default function Home() {
   return (
     <div>
       {/* Banner Section */}
-      <div className="hero">
+      <div className="hero min-h-[70vh]">
         <div className="hero-content flex-col-reverse md:flex-row-reverse">
           <Image
             src={TaskManage}
-            className="w-72 md:W-[300px] lg:w-[500px]"
+            className="mx-auto w-[90%] md:W-[300px] lg:w-[700px]"
             alt="Picture of the author"
             priority={true}
           />
@@ -46,13 +49,8 @@ export default function Home() {
             {/* Task Management */}
             <div className=" flex flex-col md:flex-row justify-evenly items-center gap-3">
 
-              <figure className="shadow-2xl ">
-                <Image
-                  src={TaskManage}
-                  className="w-72 md:W-[250px] lg:w-[300px]"
-                  alt="Picture of the author"
-                  priority={true}
-                />
+              <figure className="">
+                <Lottie animationData={animation} className="mx-auto w-[90%]"></Lottie>
               </figure>
               <div className=" p-4 font-medium text-gray-600 md:max-w-96 lg:max-w-screen-sm ">
                 <span className="text-lg md:text-2xl text-gray-800 font-semibold">Organized Task Management:</span>
@@ -62,10 +60,10 @@ export default function Home() {
             {/* Time Management */}
             <div className=" flex flex-col md:flex-row-reverse justify-evenly items-center gap-3">
 
-              <figure className="shadow-2xl ">
+              <figure className="px-2">
                 <Image
-                  src={TaskManage}
-                  className="w-72 md:W-[250px] lg:w-[300px]"
+                  src={time}
+                  className=" mx-auto w-[80%] md:W-[250px] lg:w-[300px]"
                   alt="Picture of the author"
                   priority={true}
                 />
@@ -78,10 +76,10 @@ export default function Home() {
             {/* Enhanced Collaboration */}
             <div className=" flex flex-col md:flex-row justify-evenly items-center gap-3">
 
-              <figure className="shadow-2xl ">
+              <figure className="px-2 ">
                 <Image
-                  src={TaskManage}
-                  className="w-72 md:W-[250px] lg:w-[300px]"
+                  src={meeting}
+                  className=" mx-auto w-[80%]  md:W-[250px] lg:w-[300px]"
                   alt="Picture of the author"
                   priority={true}
                 />

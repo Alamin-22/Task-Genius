@@ -1,8 +1,14 @@
+"use client"
+import useAuth from '@/Hook/useAuth';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import Avatar from "@/assets/Image/User_Avatar.png"
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
-
+    const { user, logOut } = useAuth();
+    const router = useRouter();
 
 
     const links = <>
@@ -10,6 +16,14 @@ const Navbar = () => {
         <li className='font-medium text-gray-600'><Link href={"/about"}> About </Link></li>
         <li className='font-medium text-gray-600' ><Link href={"/dashboardlayout"}> Dashboard </Link></li>
     </>
+    const handleLogout = () => {
+        logOut()
+            .then(() => {
+                router.push("/");
+            })
+            .catch();
+    };
+
 
 
     return (
@@ -33,9 +47,49 @@ const Navbar = () => {
                             {links}
                         </ul>
                     </div>
-                    <div className="navbar-end">
-                        <Link href={"/singIn"} className="btn btn-outline hover:bg-[#4bb14bdc] hover:border-0  btn-sm">Login </Link>
-                    </div>
+                    {
+                        user ?
+                            <>
+                                <div className='navbar-end'>
+                                    <div className=" dropdown dropdown-end z-10 ">
+                                        <label tabIndex={0} className="cursor-pointer">
+                                            <div className="avatar online">
+                                                <div className="w-10 rounded-full">
+                                                    <Image
+                                                        src={user?.photoURL || Avatar}
+                                                        alt="Picture of the user"
+                                                        width={100} height={100}
+                                                    />
+
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <div tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                            <p className="px-4 py-2 hover:bg-base-300 rounded-lg"> {user.displayName}</p>
+
+                                            <Link href="/dashboard" className="px-4 py-2 hover:bg-base-300 rounded-lg">
+                                                DashBoard
+                                            </Link>
+
+
+
+
+                                            <div onClick={handleLogout}
+                                                className="cursor-pointer text-red-500 px-4 py-2 hover:bg-base-300 rounded-lg">
+                                                Logout
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </>
+                            :
+                            <>
+                                <div className="navbar-end">
+                                    <Link href={"/singIn"} className="btn btn-outline hover:bg-[#4bb14bdc] hover:border-0  btn-sm">Login </Link>
+                                </div>
+                            </>
+                    }
                 </div>
             </div>
         </div>
