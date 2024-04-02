@@ -17,6 +17,7 @@ export default function Home() {
             src={TaskManage}
             className="w-72 md:W-[300px] lg:w-[500px]"
             alt="Picture of the author"
+            priority={true}
           />
           <div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl mb-3 text-center md:text-left text-gray-700 font-bold">The Ultimate Task Management Solution
@@ -50,6 +51,7 @@ export default function Home() {
                   src={TaskManage}
                   className="w-72 md:W-[250px] lg:w-[300px]"
                   alt="Picture of the author"
+                  priority={true}
                 />
               </figure>
               <div className=" p-4 font-medium text-gray-600 md:max-w-96 lg:max-w-screen-sm ">
@@ -65,6 +67,7 @@ export default function Home() {
                   src={TaskManage}
                   className="w-72 md:W-[250px] lg:w-[300px]"
                   alt="Picture of the author"
+                  priority={true}
                 />
               </figure>
               <div className=" p-4 font-medium text-gray-600  md:max-w-96 lg:max-w-screen-sm ">
@@ -80,6 +83,7 @@ export default function Home() {
                   src={TaskManage}
                   className="w-72 md:W-[250px] lg:w-[300px]"
                   alt="Picture of the author"
+                  priority={true}
                 />
               </figure>
               <div className=" p-4 font-medium text-gray-600  md:max-w-96 lg:max-w-screen-sm ">
@@ -97,3 +101,5 @@ export default function Home() {
     </div >
   );
 }
+
+

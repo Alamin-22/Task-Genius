@@ -1,33 +1,65 @@
 "use client";
-import SocialLogin from "@/components/SocialLogIn/SocialLogin";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import useAuth from "@/Hook/useAuth";
 
-const LoginPage = () => {
+const SingUpPage = () => {
+    const { CreateUser, UpdateProfile } = useAuth();
+
     const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
+    const [showPassword2, setShowPassword2] = useState(false);
 
-    const handleLogin = (e) => {
+
+    const handleSingUp = (e) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
+        const displayName = form.get("FullName");
         const email = form.get("email");
         const password = form.get("password");
+        const ConfirmPassword = form.get("ConfirmPassword");
 
-        // login
-        Login(email, password)
-            .then((res) => {
-                const user = res.user;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!0-9]).{8,}$/;
+
+        if (!passwordRegex.test(password)) {
+            toast.error(
+                "Password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, special characters, and numbers."
+            );
+            return;
+        }
+
+        // Confirm password
+        if (password !== ConfirmPassword) {
+            toast.error("Passwords do not match.");
+            return;
+        }
+
+        const UserInfo = { displayName, email, password, }
+        // console.log(UserInfo);
+
+        CreateUser(email, password)
+            .then((result) => {
+                // Signed up
+                const user = result.user;
+
                 // console.log(user);
-                toast.success(`User Successfully Logged in`);
-                router.push("/");
+
+                UpdateProfile(displayName)
+                    .then(() => {
+                        // save data to the server
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                // ...
             })
             .catch((error) => {
-                console.log(error);
+                const errorCode = error.code;
                 const message = error.message;
                 toast.error(`Error!, ${message.slice(10, 50)}`);
+                console.log(errorCode, message);
+                // ..
             });
     };
 
@@ -43,33 +75,37 @@ const LoginPage = () => {
                         alt="Cover"
                         priority={true}
                     />
-
                     <div className="absolute inset-0 bg-black opacity-50"></div>
                 </div>
 
                 <div className="relative bg-opacity-75 bg-deep-purple-accent-700">
-
                     <div className="relative px-4 py-16 mx-auto overflow-hidden sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
                         <div className="flex flex-col items-center justify-between xl:flex-row">
-                            <div className="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
-                                <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-[#f3f0f0] sm:text-4xl sm:leading-none ">
-                                    Log In and Explore Your
-                                    <br className="hidden md:block" />
-                                    Ultimate Task Management Solution
-                                </h2>
-                                <p className="max-w-xl mb-4 text-base text-gray-200 md:text-lg">
-                                    At Task Genius, we understand the importance of efficient task management in achieving your goals and maximizing productivity. Our platform offers a comprehensive set of features designed to streamline your workflow and empower you to conquer your tasks with ease. Whether you&amp;re managing personal projects, collaborating with a team, or overseeing complex initiatives, Task Genius has everything you need to stay organized and focused.
-                                </p>
-                            </div>
                             <div className="w-full max-w-xl xl:px-8 xl:w-5/12">
                                 <div className="bg-[#dfebdf] rounded-xl shadow-2xl p-7 sm:p-10">
                                     <div>
-                                        <SocialLogin></SocialLogin>
+                                        {/* <SocialLogin></SocialLogin> */}
                                     </div>
                                     <h3 className="mb-4 text-xl font-semibold text-center sm:mb-6 sm:text-2xl">
-                                        Welcome Back!
+                                        Sing Up Now!
                                     </h3>
-                                    <form onSubmit={handleLogin}>
+                                    <form onSubmit={handleSingUp}>
+                                        <div className="mb-1 sm:mb-2">
+                                            <label
+                                                htmlFor="FullName"
+                                                className="inline-block mb-1 font-medium"
+                                            >
+                                                Full Name
+                                            </label>
+                                            <input
+                                                placeholder="Your Full Name here..."
+                                                required
+                                                type="text"
+                                                className="input input-bordered input-primary w-full max-w-sm"
+                                                id="FullName"
+                                                name="FullName"
+                                            />
+                                        </div>
                                         <div className="mb-1 sm:mb-2">
                                             <label
                                                 htmlFor="email"
@@ -86,6 +122,8 @@ const LoginPage = () => {
                                                 name="email"
                                             />
                                         </div>
+
+
                                         <div className="mb-1 sm:mb-2 relative">
                                             <label
                                                 htmlFor="password"
@@ -109,35 +147,53 @@ const LoginPage = () => {
                                             >
                                                 {showPassword ? <p>Show</p> : <p> Hide</p>}
                                             </span>
-                                            <label className="label flex justify-end">
-                                                <a
-                                                    href="#"
-                                                    className="text-sm hover:text-blue-600 transition duration-300 delay-100 cursor-pointer underline"
-                                                >
-                                                    Forgot password?
-                                                </a>
+                                        </div>
+                                        <div className="mb-1 sm:mb-2 relative">
+                                            <label
+                                                htmlFor="ConfirmPassword"
+                                                className="inline-block mb-1 font-medium"
+                                            >
+                                                Confirm Password
                                             </label>
+                                            <input
+                                                placeholder="Re-Type your password here..."
+                                                required
+                                                type={showPassword2 ? "text" : "password"}
+                                                className="input input-bordered input-primary w-full max-w-sm"
+                                                id="ConfirmPassword"
+                                                name="ConfirmPassword"
+                                            />
+                                            <span
+                                                className="absolute right-5 top-10  cursor-pointer"
+                                                onClick={() => {
+                                                    setShowPassword2(!showPassword2);
+                                                }}
+                                            >
+                                                {showPassword2 ? <p>Show</p> : <p> Hide</p>}
+                                            </span>
                                         </div>
                                         <div className="mt-4 mb-2 sm:mb-4">
                                             <button
                                                 type="submit"
                                                 className="btn bg-[#4bb14b] hover:bg-[#4bb14bdc] w-full text-white"
                                             >
-                                                Login
+                                                SingUp
                                             </button>
                                         </div>
                                         <div>
                                             <p className="text-sm">
                                                 {" "}
-                                                Don&amp;t have an account?{" "}
+                                                Already have a account?{" "}
                                                 <span className="text-blue-500 font-semibold text-lg">
-                                                    <Link href={"/singUp"}>SingUp</Link>
+                                                    <Link href={"/singIn"}>LogIn </Link>
                                                 </span>
                                             </p>
                                         </div>
                                     </form>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -146,4 +202,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default SingUpPage;

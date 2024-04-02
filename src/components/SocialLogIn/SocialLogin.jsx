@@ -1,11 +1,11 @@
-import useAuth from "@/Hooks/useAuth";
-import axiosInstance from "@/api";
+import { AuthContext } from "@/provider/AuthProvider";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import toast from "react-hot-toast";
 
 const SocialLogin = () => {
+    const { GoogleSingIn } = useContext(AuthContext);
 
-    const { GoogleSingIn } = useAuth();
     const router = useRouter();
 
     const handleSocialLogin = (media) => {
@@ -40,7 +40,7 @@ const SocialLogin = () => {
     return (
         <>
             <div onClick={() => handleSocialLogin(GoogleSingIn)}
-                className="flex hover:cursor-pointer items-center justify-center mb-5 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 bg-slate-200 hover:shadow-lg"
+                className="flex hover:cursor-pointer items-center justify-center mb-5 text-white transition-colors duration-300 transform border rounded-lg bg-[#3abe3a] hover:bg-[#5ad65a] "
             >
                 <div className="px-4 py-2">
                     <svg className="w-6 h-6" viewBox="0 0 40 40">
