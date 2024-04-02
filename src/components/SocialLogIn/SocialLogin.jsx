@@ -16,7 +16,6 @@ const SocialLogin = () => {
                     email: res.user?.email,
                     UserPhoto: res.user?.photoURL,
                 }
-                console.log(userInfo);
                 axiosInstance.post("/v1/api/post-user", userInfo)
                     .then(res => {
                         if (res.data.insertedId) {

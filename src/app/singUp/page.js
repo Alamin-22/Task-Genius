@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import useAuth from "@/Hook/useAuth";
+import { useRouter } from "next/navigation";
 
 const SingUpPage = () => {
     const { CreateUser, UpdateProfile } = useAuth();
-
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
 
@@ -48,6 +49,7 @@ const SingUpPage = () => {
                 UpdateProfile(displayName)
                     .then(() => {
                         // save data to the server
+                        router.push("/")
                     })
                     .catch((error) => {
                         console.log(error);

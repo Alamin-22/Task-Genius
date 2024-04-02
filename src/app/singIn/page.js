@@ -1,4 +1,5 @@
 "use client";
+import useAuth from "@/Hook/useAuth";
 import SocialLogin from "@/components/SocialLogIn/SocialLogin";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import toast from "react-hot-toast";
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const { Login } = useAuth();
     const router = useRouter();
 
     const handleLogin = (e) => {
