@@ -1,3 +1,4 @@
+import useAxiosPublic from "@/Hook/useAxiosPublic";
 import { AuthContext } from "@/provider/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
@@ -5,6 +6,7 @@ import toast from "react-hot-toast";
 
 const SocialLogin = () => {
     const { GoogleSingIn } = useContext(AuthContext);
+    const axiosPublic = useAxiosPublic();
 
     const router = useRouter();
 
@@ -16,11 +18,11 @@ const SocialLogin = () => {
                     email: res.user?.email,
                     UserPhoto: res.user?.photoURL,
                 }
-                axiosInstance.post("/v1/api/post-user", userInfo)
+                axiosPublic.post("/post-users", userInfo)
                     .then(res => {
                         if (res.data.insertedId) {
                             toast.success("Congratulations User created Successfully");
-                            router.push("/");
+                            return router.push("/");
                         } else {
                             toast.success(" User Logged In Successfully");
                             router.push("/");

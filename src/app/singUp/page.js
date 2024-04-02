@@ -5,9 +5,11 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import useAuth from "@/Hook/useAuth";
 import { useRouter } from "next/navigation";
+import useAxiosPublic from "@/Hook/useAxiosPublic";
 
 const SingUpPage = () => {
     const { CreateUser, UpdateProfile } = useAuth();
+    const axiosPublic = useAxiosPublic();
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
@@ -49,7 +51,16 @@ const SingUpPage = () => {
                 UpdateProfile(displayName)
                     .then(() => {
                         // save data to the server
-                        router.push("/")
+                        axiosPublic.post("/post-users", UserInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    toast.success("Congratulations User created Successfully");
+                                    router.push("/");
+                                }
+                            })
+                            .catch(Error => {
+                                console.log(Error);
+                            })
                     })
                     .catch((error) => {
                         console.log(error);
