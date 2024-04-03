@@ -6,12 +6,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 const DashboardLayout = ({ children }) => {
     return (
-        <>
+        <><h2></h2>
             <div className="flex min-h-screen flex-col md:flex-row mt-1">
-                <div className="bg-red-300 ">
+
+                <div className="">
                     <DashboardNav></DashboardNav>
                 </div>
-                <div className="flex-1 border">{children}</div>
+                <div className="flex-1 ">{children}</div>
             </div>
         </>
     );

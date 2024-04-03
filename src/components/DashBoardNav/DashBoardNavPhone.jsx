@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowRight } from "react-icons/md";
 import useAuth from '@/Hook/useAuth';
+import Image from 'next/image';
+import avatar from "@/assets/Image/User_Avatar.png";
+
 
 
 const DashboardNavPhone = ({ links }) => {
@@ -16,7 +19,7 @@ const DashboardNavPhone = ({ links }) => {
             {/* Drawer init and show button */}
 
 
-            <button className=' absolute -top-16'
+            <button className=''
                 onClick={toggleDrawer}>
                 <MdKeyboardArrowRight className='text-4xl' />
             </button>
@@ -48,16 +51,20 @@ const DashboardNavPhone = ({ links }) => {
                     <div className="flex-row gap-2 flex justify-center items-center">
                         <div className="flex-shrink-0">
                             {user?.photoURL ? (
-                                <img
-                                    className="mx-auto object-cover rounded-full h-16 w-16 "
-                                    src={user?.photoURL}
+                                <Image
+                                    className="mx-auto object-cover rounded-full"
+                                    src={user?.photoURL || avatar}
                                     alt={user?.displayName}
+                                    width={64}
+                                    height={64}
                                 />
                             ) : (
-                                <img
-                                    className="mx-auto object-cover rounded-full h-16 w-16 "
-                                    src={"https://i.ibb.co/bFq9X83/user.png"}
+                                <Image
+                                    className="mx-auto object-cover rounded-full"
+                                    src={avatar}
                                     alt={user?.displayName}
+                                    width={64}
+                                    height={64}
                                 />
                             )}
                         </div>
