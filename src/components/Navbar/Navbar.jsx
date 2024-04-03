@@ -14,7 +14,7 @@ const Navbar = () => {
     const links = <>
         <li className='font-medium text-gray-600'><Link href={"/"}> Home </Link></li>
         <li className='font-medium text-gray-600'><Link href={"/about"}> About </Link></li>
-        <li className='font-medium text-gray-600' ><Link href={"/dashboardlayout"}> Dashboard </Link></li>
+        <li className='font-medium text-gray-600' ><Link href={"/dashboardlayout/my-task"}> Dashboard </Link></li>
         <div className='md:hidden '>
             {
                 user && <li className='font-medium text-gray-600 ' ><Link href={"/dashboardlayout/my-task"}>My Task</Link></li>
@@ -78,7 +78,7 @@ const Navbar = () => {
                                          bg-[#d1eed1] rounded-box w-52  font-semibold">
                                             <p className="px-4 py-2 hover:bg-[#4bb14b57] rounded-lg"> {user.displayName}</p>
 
-                                            <Link href="/dashboardlayout" className="px-4 py-2 hover:bg-[#4bb14b57] rounded-lg">
+                                            <Link href="/dashboardlayout/my-task" className="px-4 py-2 hover:bg-[#4bb14b57] rounded-lg">
                                                 DashBoard
                                             </Link>
 

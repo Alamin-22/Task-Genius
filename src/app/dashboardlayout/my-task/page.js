@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { HiArrowUturnLeft } from "react-icons/hi2";
 import { HiArrowUturnRight } from "react-icons/hi2";
 import { FiUsers } from "react-icons/fi";
@@ -13,21 +13,28 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CgSandClock } from "react-icons/cg";
 import { MdOutlineDoneOutline } from "react-icons/md";
 import moment from 'moment';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 const MyTaskPage = () => {
     const { user } = useAuth();
+    const [description, setDescription] = useState("");
 
-    const handleLogin = (e) => {
+
+    const handleDescriptionChange = (value) => {
+        setDescription(value);
+    };
+
+    const handleAddTask = (e) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
         const Task = form.get("Task");
         const Status = form.get("ToDo");
         const postedDate = moment().format("MMM Do, YY");
 
-
+        console.log(Task, Status, postedDate);
     };
-
 
     return (
         <div>
@@ -53,8 +60,36 @@ const MyTaskPage = () => {
                                 {/* if there is a button in form, it will close the modal */}
                                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             </form>
-                            <h3 className="font-bold text-lg">Hello!</h3>
-                            <p className="py-4">Press ESC key or click on ✕ button to close</p>
+                            <h3 className="font-bold text-lg">Add your Task </h3>
+                            <form onSubmit={handleAddTask} >
+                                <label className="form-control w-full ">
+                                    <div className="label">
+                                        <span className="label-text font-medium">What Is Your Task Title?</span>
+                                    </div>
+                                    <input type="text" name='Task' placeholder="Type here Your Task Name" className="input input-bordered w-full " />
+                                </label>
+                                <label className="form-control w-full ">
+                                    <div className="label">
+                                        <span className="label-text font-medium">What Is Your Task ?</span>
+                                    </div>
+                                    <ReactQuill
+                                        value={description}
+                                        onChange={handleDescriptionChange}
+                                        className="  text-gray-700 p-0  bg-white  "
+                                        modules={{
+                                            toolbar: [
+                                                [{ font: [] }],
+                                                [{ size: [] }],
+                                                ["bold", "italic", "underline", "strike", "blockquote"],
+                                                [{ 'align': [] }],
+                                                [{ 'table': [] }],
+                                                [{ list: "ordered" }, { list: "bullet" }],
+                                                ["clean"],
+                                            ],
+                                        }}
+                                    />
+                                </label>
+                            </form>
                         </div>
                     </dialog>
                 </div>
@@ -75,7 +110,7 @@ const MyTaskPage = () => {
                                             <span className="ml-2 text-sm font-light text-gray-600 ">Mar 10, 2019</span>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-3 items-center">
                                         <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
@@ -85,7 +120,9 @@ const MyTaskPage = () => {
                                 </div>
 
                                 <div className="mt-2">
-                                    <p className="mt-2 text-gray-600 dark:text-gray-300">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora expedita dicta totam aspernatur doloremque. Excepturi</p>
+                                    <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora expedita dicta totam aspernatur doloremque. Excepturi
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +163,7 @@ const MyTaskPage = () => {
                                             <span className="ml-2 text-sm font-light text-gray-600 ">Mar 10, 2019</span>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3">
+                                    <div className="flex items-center gap-3">
                                         <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
