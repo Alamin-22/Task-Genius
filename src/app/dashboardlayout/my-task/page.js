@@ -12,11 +12,23 @@ import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CgSandClock } from "react-icons/cg";
 import { MdOutlineDoneOutline } from "react-icons/md";
-
+import moment from 'moment';
 
 
 const MyTaskPage = () => {
     const { user } = useAuth();
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        const Task = form.get("Task");
+        const Status = form.get("ToDo");
+        const postedDate = moment().format("MMM Do, YY");
+
+
+    };
+
+
     return (
         <div>
             {/* head section */}
@@ -32,9 +44,19 @@ const MyTaskPage = () => {
                         <RiSoundModuleLine className='md:text-lg font-medium   ' />
                     </div>
 
-                    <button className='btn  bg-[#3ac43aee] hover:bg-[#46ac46] text-white'>
+                    <button onClick={() => document.getElementById('my_modal_3').showModal()} className='btn  bg-[#3ac43aee] hover:bg-[#46ac46] text-white'>
                         New Task +
                     </button>
+                    <dialog id="my_modal_3" className="modal">
+                        <div className="modal-box">
+                            <form method="dialog">
+                                {/* if there is a button in form, it will close the modal */}
+                                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                            </form>
+                            <h3 className="font-bold text-lg">Hello!</h3>
+                            <p className="py-4">Press ESC key or click on ✕ button to close</p>
+                        </div>
+                    </dialog>
                 </div>
             </div>
             {/* task section */}
@@ -56,6 +78,9 @@ const MyTaskPage = () => {
                                     <div className="flex gap-3">
                                         <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                        <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
+                                            Next
+                                        </button>
                                     </div>
                                 </div>
 
@@ -104,6 +129,9 @@ const MyTaskPage = () => {
                                     <div className="flex gap-3">
                                         <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                        <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
+                                            Done
+                                        </button>
                                     </div>
                                 </div>
 
@@ -134,6 +162,7 @@ const MyTaskPage = () => {
                                     <div className="flex gap-3">
                                         <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                         <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+
                                     </div>
                                 </div>
 

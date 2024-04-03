@@ -19,6 +19,10 @@ const Navbar = () => {
             {
                 user && <li className='font-medium text-gray-600 ' ><Link href={"/dashboardlayout/my-task"}>My Task</Link></li>
             }
+            {
+                user && <li className='font-medium text-gray-600 ' ><Link href={"/dashboardlayout/completedTask"}>
+                    Completed Task </Link></li>
+            }
         </div>
     </>
     const handleLogout = () => {
