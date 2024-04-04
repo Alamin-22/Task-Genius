@@ -99,25 +99,39 @@ const MyTaskPage = () => {
 
 
 
+
     const UpdateProgress = useCallback((toDoData) => {
         const Status = "inProgress";
         axiosPublic.patch(`/patch-task/${toDoData?._id}`, { Status })
             .then(res => {
                 if (res.data.modifiedCount) {
+                    console.log("UpdateProgress: Task status has been updated.");
                     toast.success(`Task status has been updated.`);
+                    setData(prevData => ({
+                        ...prevData,
+                        ToDoTasks: prevData.ToDoTasks.filter(task => task._id !== toDoData._id),
+                        inProgressTasks: [...prevData.inProgressTasks, { ...toDoData, Status: "inProgress" }]
+                    }));
                 }
             })
             .catch(error => {
-                console.log(error);
+                console.log("UpdateProgress error:", error);
                 toast.success(`Sorry Try again`);
             });
     }, [axiosPublic]);
+
+
     const handlePatchDoneTask = useCallback((inProgressData) => {
         const Status = "done";
         axiosPublic.patch(`/patch-task/${inProgressData?._id}`, { Status })
             .then(res => {
                 if (res.data.modifiedCount) {
                     toast.success(`Task status has been updated.`);
+                    setData(prevData => ({
+                        ...prevData,
+                        inProgressTasks: prevData.inProgressTasks.filter(task => task._id !== inProgressData._id),
+                        doneTasks: [...prevData.doneTasks, inProgressData]
+                    }));
                 }
             })
             .catch(error => {
@@ -126,10 +140,10 @@ const MyTaskPage = () => {
             });
     }, [axiosPublic]);
 
-    const handleDeleteUser = useCallback((toDoData, taskType) => {
+
+    const handleDeleteTask = useCallback((toDoData, taskType) => {
         axiosPublic.delete(`/Delete-task/${toDoData?._id}`)
             .then(res => {
-                console.log(res.data)
                 if (res.data.deletedCount) {
                     setData(prevData => ({
                         ...prevData,
@@ -242,7 +256,7 @@ const MyTaskPage = () => {
                                                         </form>
                                                     </div>
                                                 </dialog>
-                                                <RiDeleteBin6Line onClick={() => handleDeleteUser(toDoData, "ToDoTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <RiDeleteBin6Line onClick={() => handleDeleteTask(toDoData, "ToDoTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <button onClick={() => UpdateProgress(toDoData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b]'>
                                                     Next
                                                 </button>
@@ -283,7 +297,7 @@ const MyTaskPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <RiDeleteBin6Line onClick={() => handleDeleteUser(inProgressData, "inProgressTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <RiDeleteBin6Line onClick={() => handleDeleteTask(inProgressData, "inProgressTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <button onClick={() => handlePatchDoneTask(inProgressData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
                                                     Done
                                                 </button>
@@ -325,7 +339,7 @@ const MyTaskPage = () => {
                                             </div>
                                             <div className="flex gap-3">
 
-                                                <RiDeleteBin6Line onClick={() => handleDeleteUser(completeTask, "doneTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <RiDeleteBin6Line onClick={() => handleDeleteTask(completeTask, "doneTasks")} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                             </div>
                                         </div>
                                         <h3 className='font-semibold text-gray-700'>{completeTask?.Task}</h3>
