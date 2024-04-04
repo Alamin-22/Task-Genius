@@ -25,17 +25,20 @@ const MyTaskPage = () => {
     const [data, setData] = useState({});
 
 
-
-    useEffect(() => {
+    const fetchTaskData = useCallback(() => {
         axiosPublic.get(`/get-task/${userEmail}`)
             .then((res) => {
                 // console.log(res.data);
                 setData(res.data);
             })
-            .catch((error => {
+            .catch((error) => {
                 console.log(error);
-            }))
+            });
     }, [axiosPublic, userEmail]);
+
+    useEffect(() => {
+        fetchTaskData();
+    }, [fetchTaskData]);
 
 
     const handleAddTask = useCallback((e) => {
@@ -56,12 +59,13 @@ const MyTaskPage = () => {
                     ToDoTasks: [...prevData.ToDoTasks, TaskInfo]
                 }));
                 e.target.reset();
+                fetchTaskData();
                 document.getElementById('my_modal_3').close();
             })
             .catch(error => {
                 console.log(error);
             });
-    }, [axiosPublic, userEmail]);
+    }, [axiosPublic, fetchTaskData, userEmail]);
 
     const handlePatchTask = useCallback((e, toDoData) => {
         e.preventDefault();
@@ -89,37 +93,34 @@ const MyTaskPage = () => {
                     ToDoTasks: updatedToDoTasks
                 }));
                 e.target.reset();
-                console.log(res);
+                fetchTaskData();
                 document.getElementById(`UpdateToDo_${toDoData._id}`).close();
             })
             .catch(error => {
                 console.log(error);
             });
-    }, [axiosPublic, data]);
-
-
-
+    }, [axiosPublic, data.ToDoTasks, fetchTaskData]);
 
     const UpdateProgress = useCallback((toDoData) => {
         const Status = "inProgress";
         axiosPublic.patch(`/patch-task/${toDoData?._id}`, { Status })
             .then(res => {
                 if (res.data.modifiedCount) {
-                    console.log("UpdateProgress: Task status has been updated.");
                     toast.success(`Task status has been updated.`);
+                    fetchTaskData();
                     setData(prevData => ({
                         ...prevData,
                         ToDoTasks: prevData.ToDoTasks.filter(task => task._id !== toDoData._id),
                         inProgressTasks: [...prevData.inProgressTasks, { ...toDoData, Status: "inProgress" }]
                     }));
+
                 }
             })
             .catch(error => {
                 console.log("UpdateProgress error:", error);
                 toast.success(`Sorry Try again`);
             });
-    }, [axiosPublic]);
-
+    }, [axiosPublic, fetchTaskData]);
 
     const handlePatchDoneTask = useCallback((inProgressData) => {
         const Status = "done";
@@ -127,6 +128,7 @@ const MyTaskPage = () => {
             .then(res => {
                 if (res.data.modifiedCount) {
                     toast.success(`Task status has been updated.`);
+                    fetchTaskData();
                     setData(prevData => ({
                         ...prevData,
                         inProgressTasks: prevData.inProgressTasks.filter(task => task._id !== inProgressData._id),
@@ -138,13 +140,13 @@ const MyTaskPage = () => {
                 console.log(error);
                 toast.success(`Sorry Try again`);
             });
-    }, [axiosPublic]);
-
+    }, [axiosPublic, fetchTaskData]);
 
     const handleDeleteTask = useCallback((toDoData, taskType) => {
         axiosPublic.delete(`/Delete-task/${toDoData?._id}`)
             .then(res => {
                 if (res.data.deletedCount) {
+                    fetchTaskData();
                     setData(prevData => ({
                         ...prevData,
                         [taskType]: prevData[taskType].filter(item => item._id !== toDoData?._id)
@@ -155,7 +157,10 @@ const MyTaskPage = () => {
             .catch(error => {
                 console.log(error)
             })
-    }, [axiosPublic]);
+    }, [axiosPublic, fetchTaskData]);
+
+
+
 
 
     // console.log(data.ToDoTasks);
@@ -262,7 +267,7 @@ const MyTaskPage = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        <h3 className='font-semibold text-gray-700'>{toDoData?.Task}</h3>
+                                        <h3 className='font-semibold  text-gray-700'>{toDoData?.Task}</h3>
                                         <div className="mt-2">
                                             <p className="mt-2 text-gray-600 ">
                                                 {toDoData?.TaskDetails}
