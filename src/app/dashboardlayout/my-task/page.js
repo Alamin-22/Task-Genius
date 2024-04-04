@@ -23,6 +23,7 @@ const MyTaskPage = () => {
     const userEmail = user?.email;
     const axiosPublic = useAxiosPublic();
     const [data, setData] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const fetchTaskData = useCallback(() => {
@@ -30,9 +31,11 @@ const MyTaskPage = () => {
             .then((res) => {
                 // console.log(res.data);
                 setData(res.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
+                setIsLoading(false);
             });
     }, [axiosPublic, userEmail]);
 
@@ -159,7 +162,28 @@ const MyTaskPage = () => {
             })
     }, [axiosPublic, fetchTaskData]);
 
+    if (isLoading) {
+        return <>
+            <div className="flex flex-col lg:flex-row gap-4 px-2">
+                <div className='skeleton h-32 w-full '>
+                    <div className="skeleton h-32 w-full my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                </div>
+                <div className='skeleton h-32 w-full '>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                </div>
+                <div className='skeleton h-32 w-full '>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                    <div className="skeleton h-32 w-full  my-2"></div>
+                </div>
 
+            </div>
+        </>
+    }
 
 
 
