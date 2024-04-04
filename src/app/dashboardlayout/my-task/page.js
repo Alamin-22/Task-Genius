@@ -80,9 +80,22 @@ const MyTaskPage = () => {
             });
     }, [axiosPublic, data]);
 
-    const UpdateProgress = useCallback((product) => {
+    const UpdateProgress = useCallback((toDoData) => {
         const Status = "inProgress";
-        axiosPublic.patch(`/patch-bookings/${product?._id}`, { Status })
+        axiosPublic.patch(`/patch-task/${toDoData?._id}`, { Status })
+            .then(res => {
+                if (res.data.modifiedCount) {
+                    toast.success(`Task status has been updated.`);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                toast.success(`Sorry Try again`);
+            });
+    }, [axiosPublic]);
+    const handlePatchDoneTask = useCallback((inProgressData) => {
+        const Status = "done";
+        axiosPublic.patch(`/patch-task/${inProgressData?._id}`, { Status })
             .then(res => {
                 if (res.data.modifiedCount) {
                     toast.success(`Task status has been updated.`);
@@ -163,7 +176,7 @@ const MyTaskPage = () => {
             <section className=' grid lg:grid-cols-3 gap-4 px-2  '>
                 <div className='col-span-1   py-3 px-2 '>
                     <div className='rounded-lg bg-blue-100 space-y-4 py-2 '>
-                        <h5 className='md:text-xl font-medium flex items-center gap-3 px-3'><MdOutlineAddBox /> To do {data?.ToDoTasks?.length}</h5>
+                        <h5 className='md:text-xl font-medium flex items-center gap-3 px-3'><MdOutlineAddBox /> To do  {data?.ToDoTasks?.length} Task</h5>
                         {
                             data && data.ToDoTasks && data.ToDoTasks?.map((toDoData, idx) =>
                                 <div key={idx} className=''>
@@ -180,14 +193,14 @@ const MyTaskPage = () => {
                                             <div className="flex gap-3 items-center">
                                                 <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <RiDeleteBin6Line onClick={() => handleDeleteUser(toDoData)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-                                                <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b]'>
+                                                <button onClick={() => UpdateProgress(toDoData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b]'>
                                                     Next
                                                 </button>
                                             </div>
                                         </div>
-
+                                        <h3 className='font-semibold text-gray-700'>{toDoData?.Task}</h3>
                                         <div className="mt-2">
-                                            <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                            <p className="mt-2 text-gray-600 ">
                                                 {toDoData?.TaskDetails}
                                             </p>
                                         </div>
@@ -201,64 +214,82 @@ const MyTaskPage = () => {
                 <div className='col-span-1   py-3 px-2 '>
                     <div className='rounded-lg bg-orange-100 space-y-4 py-2 '>
                         <h5 className='md:text-xl font-medium flex items-center gap-3 px-3'>
-                            <CgSandClock /> In Progress
+                            <CgSandClock /> In Progress {data?.inProgressTasks?.length}
                         </h5>
-                        <div className=''>
-                            <div className="mx-2  px-2 py-4 bg-gray-200 rounded-lg shadow-md ">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center justify-between">
+                        {
+                            data && data.inProgressTasks && data.inProgressTasks?.map((inProgressData, idx) =>
+                                <div key={idx}>
+                                    <div className="mx-2  px-2 py-4 bg-gray-200 rounded-lg shadow-md ">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between">
 
-                                        <div className="flex items-center ">
-                                            <Image priority={true} className="object-cover w-10 h-10  rounded-full sm:block"
-                                                src={user?.photoURL || Avatar} alt="avatar" width={40} height={40} />
-                                            <span className="ml-2 text-sm font-light text-gray-600 ">Mar 10, 2019</span>
+                                                <div className="flex items-center ">
+                                                    <Image priority={true} className="object-cover w-10 h-10  rounded-full sm:block"
+                                                        src={user?.photoURL || Avatar} alt="avatar" width={40} height={40} />
+                                                    <span className="ml-2 text-sm font-light text-gray-600 ">
+                                                        {inProgressData?.postedDate}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <RiDeleteBin6Line onClick={() => handleDeleteUser(inProgressData)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <button onClick={() => handlePatchDoneTask(inProgressData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
+                                                    Done
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <h3 className='font-semibold text-gray-700'>{inProgressData?.Task}</h3>
+                                        <div className="mt-2">
+                                            <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                                {inProgressData?.TaskDetails}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-                                        <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-                                        <button className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
-                                            Done
-                                        </button>
-                                    </div>
                                 </div>
+                            )
+                        }
 
-                                <div className="mt-2">
-                                    <p className="mt-2 text-gray-600 dark:text-gray-300">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora expedita dicta totam aspernatur doloremque. Excepturi</p>
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
                 <div className='col-span-1    py-3 px-2 '>
                     <div className='rounded-lg bg-green-100 space-y-4 py-2 '>
                         <h5 className='md:text-xl font-medium flex items-center gap-3 px-3'>
-                            <MdOutlineDoneOutline /> Done
+                            <MdOutlineDoneOutline /> Done {data?.doneTasks?.length}
                         </h5>
-                        <div className=''>
-                            <div className="mx-2  px-2 py-4 bg-gray-200 rounded-lg shadow-md ">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center justify-between">
+                        {
+                            data && data.doneTasks && data.doneTasks?.map((completeTask, idx) =>
+                                <div key={idx} className=''>
+                                    <div className="mx-2  px-2 py-4 bg-gray-200 rounded-lg shadow-md ">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between">
 
-                                        <div className="flex items-center ">
-                                            <Image priority={true} className="object-cover w-10 h-10  rounded-full sm:block"
-                                                src={user?.photoURL || Avatar} alt="avatar" width={40} height={40} />
-                                            <span className="ml-2 text-sm font-light text-gray-600 ">Mar 10, 2019</span>
+                                                <div className="flex items-center ">
+                                                    <Image priority={true} className="object-cover w-10 h-10  rounded-full sm:block"
+                                                        src={user?.photoURL || Avatar} alt="avatar" width={40} height={40} />
+                                                    <span className="ml-2 text-sm font-light text-gray-600 ">
+                                                        {completeTask?.postedDate}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+
+                                            </div>
+                                        </div>
+                                        <h3 className='font-semibold text-gray-700'>{completeTask?.Task}</h3>
+                                        <div className="mt-2">
+                                            <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                                {completeTask?.TaskDetails}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3">
-                                        <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-                                        <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-
-                                    </div>
                                 </div>
+                            )
+                        }
 
-                                <div className="mt-2">
-                                    <p className="mt-2 text-gray-600 dark:text-gray-300">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora expedita dicta totam aspernatur doloremque. Excepturi</p>
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
