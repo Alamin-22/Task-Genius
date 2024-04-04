@@ -17,32 +17,42 @@ import useAxiosPublic from '@/Hook/useAxiosPublic';
 import toast from 'react-hot-toast';
 
 
-
+const PAGE_SIZE = 10;
 const MyTaskPage = () => {
     const { user } = useAuth();
     const userEmail = user?.email;
     const axiosPublic = useAxiosPublic();
     const [data, setData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
 
     const fetchTaskData = useCallback(() => {
-        axiosPublic.get(`/get-task/${userEmail}`)
+        axiosPublic.get(`/get-task/${userEmail}?page=${currentPage}&size=${PAGE_SIZE}`)
             .then((res) => {
-                // console.log(res.data);
                 setData(res.data);
                 setIsLoading(false);
+                setTotalPages(Math.ceil(res.data.totalCount / PAGE_SIZE));
             })
             .catch((error) => {
                 console.log(error);
                 setIsLoading(false);
             });
-    }, [axiosPublic, userEmail]);
+    }, [axiosPublic, currentPage, userEmail]);
 
     useEffect(() => {
         fetchTaskData();
     }, [fetchTaskData]);
 
+
+    const handlePagination = (direction) => {
+        if (direction === 'prev' && currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        } else if (direction === 'next' && currentPage < totalPages - 1) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
     const handleAddTask = useCallback((e) => {
         e.preventDefault();
@@ -386,6 +396,14 @@ const MyTaskPage = () => {
                     </div>
                 </div>
             </section>
+            {/* pagination */}
+            <div className='flex justify-center mb-10 w-full'>
+
+                <div className="join grid grid-cols-2">
+                    <button onClick={() => handlePagination('prev')} className="join-item btn btn-outline  hover:bg-[#46ac46]">Previous page</button>
+                    <button onClick={() => handlePagination('next')} className="join-item btn btn-outline  hover:bg-[#46ac46]">Next</button>
+                </div>
+            </div>
         </div >
     );
 };
