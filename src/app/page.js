@@ -6,9 +6,11 @@ import Lottie from "lottie-react";
 import animation from "@/assets/animation.json"
 import meeting from "@/assets/Image/meeting.png"
 import time from "@/assets/Image/time.png"
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const ReactRotatingText = require('react-rotating-text');
+  const router = useRouter();
 
 
   return (
@@ -29,7 +31,7 @@ export default function Home() {
 
             </h1>
             <div className="text-center md:text-left">
-              <button className=" btn btn-primary text-white">Get Started</button>
+              <button onClick={() => router.push("/singIn")} className=" btn btn-primary text-white">Get Started</button>
             </div>
           </div>
         </div>

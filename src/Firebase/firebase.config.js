@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_APIKEY,
-    authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
-    projectId: process.env.NEXT_PUBLIC_PROJECTID,
-    storageBucket: process.env.NEXT_PUBLIC_STORAGEBUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
-    appId: process.env.NEXT_PUBLIC_APPID,
+    apiKey: "AIzaSyDFHxwifN5980VdL92-5GuqLPAlA99JhWc",
+    authDomain: "task-genius24.firebaseapp.com",
+    projectId: "task-genius24",
+    storageBucket: "task-genius24.appspot.com",
+    messagingSenderId: "680677023329",
+    appId: "1:680677023329:web:d3819201625bd0eaa4d420",
 };
 
 // Initialize Firebase
