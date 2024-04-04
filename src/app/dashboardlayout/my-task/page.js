@@ -25,6 +25,7 @@ const MyTaskPage = () => {
     const [data, setData] = useState({});
 
 
+
     useEffect(() => {
         axiosPublic.get(`/get-task/${userEmail}`)
             .then((res) => {
@@ -62,23 +63,41 @@ const MyTaskPage = () => {
             });
     }, [axiosPublic, userEmail]);
 
-    const handlePatchTask = useCallback((e) => {
+    const handlePatchTask = useCallback((e, toDoData) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
-        const Task = form.get("patchTask");
-        const TaskDetails = form.get("PatchTaskDetails");
-        const TaskInfo = { Task, TaskDetails };
+        const updatedTask = form.get("patchTask");
+        const updatedTaskDetails = form.get("PatchTaskDetails");
 
-        axiosPublic.patch("/post-task", TaskInfo)
+        const updatedToDoTasks = data.ToDoTasks.map(task => {
+            if (task._id === toDoData._id) {
+                return {
+                    ...task,
+                    Task: updatedTask,
+                    TaskDetails: updatedTaskDetails
+                };
+            } else {
+                return task;
+            }
+        });
+
+        axiosPublic.patch(`/patch-task/${toDoData._id}`, { Task: updatedTask, TaskDetails: updatedTaskDetails })
             .then(res => {
                 toast.success(`Task Successfully Updated`);
-                setData([...data, TaskInfo]);
+                setData(prevData => ({
+                    ...prevData,
+                    ToDoTasks: updatedToDoTasks
+                }));
                 e.target.reset();
+                console.log(res);
+                document.getElementById(`UpdateToDo_${toDoData._id}`).close();
             })
             .catch(error => {
                 console.log(error);
             });
     }, [axiosPublic, data]);
+
+
 
     const UpdateProgress = useCallback((toDoData) => {
         const Status = "inProgress";
@@ -191,7 +210,38 @@ const MyTaskPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex gap-3 items-center">
-                                                <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+                                                <TbEdit onClick={() => document.getElementById(`UpdateToDo_${toDoData?._id}`).showModal()} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
+
+                                                <dialog id={`UpdateToDo_${toDoData?._id}`} className="modal">
+                                                    <div className="modal-box">
+                                                        <form method="dialog">
+
+                                                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                                        </form>
+                                                        <h3 className="font-bold text-lg">Update your Task </h3>
+                                                        <form onSubmit={(e) => {
+                                                            e.preventDefault();
+                                                            handlePatchTask(e, toDoData);
+                                                        }} >
+                                                            <label className="form-control w-full ">
+                                                                <div className="label">
+                                                                    <span className="label-text font-medium">What Is Your Task Title?</span>
+                                                                </div>
+                                                                <input type="text" name='patchTask' placeholder="Type here Your Task Name" className="input input-bordered w-full bg-white " defaultValue={toDoData?.Task} />
+                                                            </label>
+                                                            <label className="form-control w-full ">
+                                                                <div className="label">
+                                                                    <span className="label-text font-medium">What Is Your Task ?</span>
+                                                                </div>
+                                                                <textarea name='PatchTaskDetails' rows={4} className="textarea textarea-bordered  bg-white"
+                                                                    defaultValue={toDoData?.TaskDetails} placeholder="Write About your Task here..."></textarea>
+                                                            </label>
+                                                            <button type='submit' className='btn mt-5 w-full bg-[#3ac43aee] hover:bg-[#46ac46] text-white '>
+                                                                Update Task
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </dialog>
                                                 <RiDeleteBin6Line onClick={() => handleDeleteUser(toDoData)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <button onClick={() => UpdateProgress(toDoData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b]'>
                                                     Next
@@ -275,8 +325,7 @@ const MyTaskPage = () => {
                                             </div>
                                             <div className="flex gap-3">
                                                 <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-                                                <RiDeleteBin6Line className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
-
+                                                <RiDeleteBin6Line onClick={() => handleDeleteUser(completeTask)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                             </div>
                                         </div>
                                         <h3 className='font-semibold text-gray-700'>{completeTask?.Task}</h3>
