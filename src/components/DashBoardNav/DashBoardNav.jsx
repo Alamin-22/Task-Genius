@@ -8,7 +8,7 @@ import { MdOutlineDoneOutline } from "react-icons/md";
 
 import { GrTask } from "react-icons/gr";
 const DashboardNav = () => {
-    const { logOut } = useAuth();
+    const { user, logOut } = useAuth();
     const router = useRouter();
 
     const handleLogout = () => {
@@ -47,7 +47,9 @@ const DashboardNav = () => {
                 </p>
 
                 <div className="w-full mt-4 border-b-2 border-white"></div>
-                <div>
+
+                {
+                    user &&
                     <p
                         onClick={handleLogout}
                         className="cursor-pointer flex items-center px-4 py-2 rounded-lg mt-3 hover:bg-gray-100"
@@ -55,7 +57,8 @@ const DashboardNav = () => {
                         <FiLogOut className="text-xl text-red-600" />
                         <span className="mx-4 text-red-600 font-medium">Log Out</span>
                     </p>
-                </div>
+                }
+
             </div>
 
         </>

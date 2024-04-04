@@ -15,21 +15,24 @@ import { MdOutlineDoneOutline } from "react-icons/md";
 import moment from 'moment';
 import useAxiosPublic from '@/Hook/useAxiosPublic';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 
 const PAGE_SIZE = 10;
 const MyTaskPage = () => {
     const { user } = useAuth();
     const userEmail = user?.email;
+
     const axiosPublic = useAxiosPublic();
     const [data, setData] = useState({});
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
 
     const fetchTaskData = useCallback(() => {
-        axiosPublic.get(`/get-task/${userEmail}?page=${currentPage}&size=${PAGE_SIZE}`)
+        axiosPublic.get(`/get-task/${userEmail}`)
             .then((res) => {
                 setData(res.data);
                 setIsLoading(false);
@@ -39,7 +42,7 @@ const MyTaskPage = () => {
                 console.log(error);
                 setIsLoading(false);
             });
-    }, [axiosPublic, currentPage, userEmail]);
+    }, [axiosPublic, userEmail]);
 
     useEffect(() => {
         fetchTaskData();
@@ -55,6 +58,7 @@ const MyTaskPage = () => {
     };
 
     const handleAddTask = useCallback((e) => {
+
         e.preventDefault();
         const form = new FormData(e.currentTarget);
         const Task = form.get("Task");
@@ -63,6 +67,14 @@ const MyTaskPage = () => {
         const email = userEmail;
         const postedDate = moment().format("MMM Do, YY");
         const TaskInfo = { email, Task, Status, TaskDetails, postedDate };
+
+        if (user === null) {
+            toast.error(`Login First to Use Our Service`, {
+                duration: 5000
+            });
+            router.push('/singIn');
+            return null;
+        }
 
         axiosPublic.post("/post-task", TaskInfo)
             .then(res => {
@@ -78,7 +90,7 @@ const MyTaskPage = () => {
             .catch(error => {
                 console.log(error);
             });
-    }, [axiosPublic, fetchTaskData, userEmail]);
+    }, [axiosPublic, fetchTaskData, router, user, userEmail]);
 
     const handlePatchTask = useCallback((e, toDoData) => {
         e.preventDefault();
@@ -172,6 +184,8 @@ const MyTaskPage = () => {
             })
     }, [axiosPublic, fetchTaskData]);
 
+
+
     if (isLoading) {
         return <>
             <div className="flex flex-col lg:flex-row gap-4 px-2">
@@ -194,6 +208,7 @@ const MyTaskPage = () => {
             </div>
         </>
     }
+
 
 
 
