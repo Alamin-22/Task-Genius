@@ -202,7 +202,6 @@ const MyTaskPage = () => {
                                     <div className="mx-2  px-2 py-4 bg-gray-200 rounded-lg shadow-md ">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center justify-between">
-
                                                 <div className="flex items-center ">
                                                     <Image priority={true} className="object-cover w-10 h-10  rounded-full sm:block"
                                                         src={user?.photoURL || Avatar} alt="avatar" width={40} height={40} />
@@ -261,6 +260,7 @@ const MyTaskPage = () => {
 
                     </div>
                 </div>
+                {/*  inprogress */}
                 <div className='col-span-1   py-3 px-2 '>
                     <div className='rounded-lg bg-orange-100 space-y-4 py-2 '>
                         <h5 className='md:text-xl font-medium flex items-center gap-3 px-3'>
@@ -282,7 +282,6 @@ const MyTaskPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <RiDeleteBin6Line onClick={() => handleDeleteUser(inProgressData)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <button onClick={() => handlePatchDoneTask(inProgressData)} className='btn btn-xs btn-outline text-gray-600  hover:border-0 hover:bg-[#4bb14b] '>
                                                     Done
@@ -324,7 +323,6 @@ const MyTaskPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex gap-3">
-                                                <TbEdit className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                                 <RiDeleteBin6Line onClick={() => handleDeleteUser(completeTask)} className='md:text-xl cursor-pointer hover:text-red-400 transition delay-200 text-gray-600' />
                                             </div>
                                         </div>
